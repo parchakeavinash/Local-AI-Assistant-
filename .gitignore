@@ -1,0 +1,12 @@
+.venv/
+.env
+__pycache__/
+*.log
+
+# Temporary files
+# ─────────────────────────────────────────────
+*.tmp
+*.temp
+*.swp
+*.bak
+

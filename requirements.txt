@@ -1,0 +1,8 @@
+ollama 
+chromadb 
+pydantic 
+langchain-community 
+sentence-transformers 
+rich 
+click 
+pytest
