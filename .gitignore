@@ -10,3 +10,8 @@ __pycache__/
 *.swp
 *.bak
 
+rag_test_report.md
+features_and_architecture.md
+implementation_plan.md
+
+test_ollama.py
