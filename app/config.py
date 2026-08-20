@@ -19,7 +19,7 @@ BENCHMARK_RESULT_DIR.mkdir(parents=True, exist_ok=True)
 # ollama setting
 
 MODEL_LLAMA ='llama3.2:3b'
-MODEL_MISTRAL='mistral:7b '
+MODEL_MISTRAL='mistral:7b'
 MODEL_PHI3='phi3:3.8b'
 
 EMBEDDING_MODEL='nomic-embed-text:latest'

@@ -212,6 +212,7 @@ def query_structured(
                 bad_response=last_response,
             )
             print(f"  [Retry {attempt}/{max_retries - 1}] Correcting invalid output...")
+            time.sleep(3)  # give Ollama time to free memory before next call
 
         # Call the LLM
         raw_text, latency_ms = generate(

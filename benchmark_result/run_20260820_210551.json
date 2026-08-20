@@ -1,0 +1,67 @@
+[
+  {
+    "model_name": "phi3:3.8b",
+    "question_id": 0,
+    "question": "What problem in conventional Retrieval-Augmented Generation (RAG) is CRAG specifically designed to address?",
+    "category": "factual",
+    "answer": "Crag proposed Corrective Retrieval-Augmented Generation (CRAG) addresses scenarios where retriever returns inaccurate results.",
+    "confidence": 1.0,
+    "latency_ms": 29935.2,
+    "ram_used_mb": 0.0,
+    "retries": 0,
+    "success": true,
+    "quality_score": null
+  },
+  {
+    "model_name": "phi3:3.8b",
+    "question_id": 1,
+    "question": "What are the three confidence-based actions used by the CRAG retrieval evaluator?",
+    "category": "factual",
+    "answer": "SKIPPED: Ollama connection lost",
+    "confidence": 0.0,
+    "latency_ms": 0.0,
+    "ram_used_mb": 0.0,
+    "retries": 0,
+    "success": false,
+    "quality_score": null
+  },
+  {
+    "model_name": "phi3:3.8b",
+    "question_id": 2,
+    "question": "What model is used to initialize the retrieval evaluator in CRAG, and approximately how many parameters does the evaluator have?",
+    "category": "factual",
+    "answer": "SKIPPED: Ollama connection lost",
+    "confidence": 0.0,
+    "latency_ms": 0.0,
+    "ram_used_mb": 0.0,
+    "retries": 0,
+    "success": false,
+    "quality_score": null
+  },
+  {
+    "model_name": "phi3:3.8b",
+    "question_id": 3,
+    "question": "What happens to retrieved documents when the retrieval evaluator classifies the retrieval as Incorrect?",
+    "category": "factual",
+    "answer": "SKIPPED: Ollama connection lost",
+    "confidence": 0.0,
+    "latency_ms": 0.0,
+    "ram_used_mb": 0.0,
+    "retries": 0,
+    "success": false,
+    "quality_score": null
+  },
+  {
+    "model_name": "phi3:3.8b",
+    "question_id": 4,
+    "question": "What are the four datasets used to evaluate CRAG, and which evaluation metric is used for the Biography dataset?",
+    "category": "factual",
+    "answer": "SKIPPED: Ollama connection lost",
+    "confidence": 0.0,
+    "latency_ms": 0.0,
+    "ram_used_mb": 0.0,
+    "retries": 0,
+    "success": false,
+    "quality_score": null
+  }
+]
