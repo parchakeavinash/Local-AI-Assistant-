@@ -1,9 +1,16 @@
 from __future__ import annotations
 
+import json
+import re
 import time
 import ollama
+import psutil
 
-# from app.config import OLLAMA_BASE_URL,DEFAULT_MODEL,EMBEDDING_MODEL
+from pydantic import BaseModel, ValidationError
+from typing import Type, TypeVar
+
+T = TypeVar("T", bound=BaseModel)
+
 from app.config import OLLAMA_BASE_URL,DEFAULT_MODEL,EMBEDDING_MODEL
 
 
@@ -117,35 +124,126 @@ def embed(text:str)->list[float]:
     return response.embedding
 
 
-# if __name__ == "__main__":
+# extract JSON from raw LLM output
 
-    # print(f"Testing generate() with model: {DEFAULT_MODEL}")
-    # print("Prompt: 'Say hello in exactly one sentence.'\n")
+def extract_json(raw_text: str) -> str:
+    """
+    Pull out the JSON object from the model's raw response.
 
-    # try:
-    #     text, ms = generate(
-    #         prompt="Say hello in exactly one sentence.",
-    #         system_prompt="You are a helpful assistant. Always reply briefly.",
-    #     )
-    #     print(f"Response : {text.strip()}")
-    #     print(f"Latency  : {ms:.1f} ms")
-    #     print("[OK] generate() works!\n")
-    # except ConnectionError as e:
-    #     print(f"[ERROR] Connection failed: {e}")
-    #     print("-> Make sure Ollama is running: open a terminal and run 'ollama serve'")
-    #     exit(1)
+    Models sometimes wrap JSON in markdown fences like:
+      ```json
+      { ... }
+      ```
+    """
+    # strip markdown code fences first
+    fence_match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", raw_text, re.DOTALL)
+    if fence_match:
+        return fence_match.group(1).strip()
 
-    # # testing embeding model
-    # print(f"Testing embed() with model: {EMBEDDING_MODEL}")
-    # print("Text: 'Machine learning is a subset of AI.'\n")
+    # find a raw JSON object { ... }
+    brace_match = re.search(r"\{.*\}", raw_text, re.DOTALL)
+    if brace_match:
+        return brace_match.group(0).strip()
 
-    # try:
-    #     vector = embed("Machine learning is a subset of AI.")
-    #     print(f"Vector dimensions : {len(vector)}")
-    #     print(f"First 5 values    : {[round(v, 4) for v in vector[:5]]}")
-    #     print("[OK] embed() works!\n")
-    # except Exception as e:
-    #     print(f"[ERROR] Embedding failed: {e}")
-    #     print(f"-> Make sure nomic-embed-text is pulled: ollama pull {EMBEDDING_MODEL}")
+    return raw_text.strip()
+    
 
-    # print("=== All tests done ===")
+def query_structured(
+    prompt: str,
+    schema: Type[T],
+    model: str = DEFAULT_MODEL,
+    system_prompt: str | None = None,
+    max_retries: int = 3,
+) -> tuple[T, float, float, int]:
+    """
+    Call the LLM and enforce that it returns a valid Pydantic model.
+
+    This is the production-grade pattern:
+    - Call the LLM with the prompt
+    - Extract JSON from the response
+    - Validate it against the schema
+    - If invalid → inject the error back into the prompt and retry
+    - Repeat up to max_retries times
+    - If still failing → raise an exception
+
+    Args:
+        prompt      : The user/RAG prompt to send.
+        schema      : The Pydantic model class the response must conform to.
+        model       : Ollama model to use.
+        system_prompt : System instruction (uses SYSTEM_PROMPT from prompts.py if None).
+        max_retries : How many times to retry on bad output. Default 3.
+
+    Returns:
+        Tuple of (parsed_model, latency_ms, ram_used_mb, retries_used)
+        - parsed_model : Validated Pydantic instance (e.g. AnswerResponse)
+        - latency_ms   : Total wall-clock time for all LLM calls combined (ms)
+        - ram_used_mb  : RAM delta consumed during this call (MB)
+        - retries_used : How many retries were needed (0 = first try worked)
+
+    Raises:
+        RuntimeError : If the model fails to produce valid JSON after all retries.
+
+    Example:
+        from app.model.schema import AnswerResponse
+        result, ms, ram, retries = query_structured(prompt, AnswerResponse)
+        print(result.answer, result.confidence)
+    """
+    from app.llm.prompts import build_correction_prompt, SYSTEM_PROMPT
+
+    if system_prompt is None:
+        system_prompt = SYSTEM_PROMPT
+
+    # Measure RAM before the call
+    process = psutil.Process()
+    ram_before_mb = process.memory_info().rss / (1024 * 1024)
+
+    total_latency_ms = 0.0
+    current_prompt = prompt
+    last_error = ""
+    last_response = ""
+
+    for attempt in range(max_retries):
+
+        # On retry: inject the previous error into the prompt
+        if attempt > 0:
+            current_prompt = build_correction_prompt(
+                original_prompt=prompt,
+                validation_error=last_error,
+                bad_response=last_response,
+            )
+            print(f"  [Retry {attempt}/{max_retries - 1}] Correcting invalid output...")
+            time.sleep(3)  # give Ollama time to free memory before next call
+
+        # Call the LLM
+        raw_text, latency_ms = generate(
+            prompt=current_prompt,
+            model=model,
+            system_prompt=system_prompt,
+        )
+        total_latency_ms += latency_ms
+
+        # Extract JSON from the response
+        json_str = extract_json(raw_text)
+        last_response = raw_text
+
+        # Validate against the Pydantic schema
+        try:
+            parsed = schema.model_validate_json(json_str)
+
+            # Success — measure RAM delta and return
+            ram_after_mb = process.memory_info().rss / (1024 * 1024)
+            ram_used_mb = max(0.0, ram_after_mb - ram_before_mb)
+
+            return parsed, total_latency_ms, ram_used_mb, attempt
+
+        except (ValidationError, json.JSONDecodeError, Exception) as e:
+            last_error = str(e)
+            print(f"  [Attempt {attempt + 1}] Validation failed: {last_error[:120]}")
+
+    # All retries exhausted
+    raise RuntimeError(
+        f"Model '{model}' failed to produce valid {schema.__name__} "
+        f"after {max_retries} attempts.\n"
+        f"Last error : {last_error}\n"
+        f"Last output: {last_response[:300]}"
+    )

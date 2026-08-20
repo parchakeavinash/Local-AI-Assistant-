@@ -1,0 +1,8 @@
+model_name,question_id,question,category,answer,confidence,latency_ms,ram_used_mb,retries,success,quality_score
+phi3:3.8b,0,What problem in conventional Retrieval-Augmented Generation (RAG) is CRAG specifically designed to address?,factual,Crag addresses scenarios where retrievers return inaccurate results,1.0,28471.1,0.0,0,True,
+phi3:3.8b,1,What are the three confidence-based actions used by the CRAG retrieval evaluator?,factual,The text does not specify what exactly the three knowledge retrieval actions or their corresponding confidence degrees are.,0.8,24972.0,0.0,0,True,
+phi3:3.8b,2,"What model is used to initialize the retrieval evaluator in CRAG, and approximately how many parameters does the evaluator have?",factual,"FAILED: Model 'phi3:3.8b' failed to produce valid AnswerResponse after 3 attempts.
+Last error : 1 validation error for AnswerResponse
+  Invalid JSON: invalid number at line 6 column 18 [type=json_invalid, inp",0.0,0.0,0.0,3,False,
+phi3:3.8b,3,What happens to retrieved documents when the retrieval evaluator classifies the retrieval as Incorrect?,factual,The knowledge from the unreliable retrieved results is not used and may lead to misinformation.,1.0,25996.5,0.0,0,True,
+phi3:3.8b,4,"What are the four datasets used to evaluate CRAG, and which evaluation metric is used for the Biography dataset?",factual,"The four datasets used to evaluate CRAG are PopQA (short-form generation), Biography (long-form generation) twice, PubHealth (true-or-false question), and Arc-Challenge (multiple-choice question). The evaluation metric for the Biography dataset is FactScore.",1.0,28952.6,0.0,0,True,

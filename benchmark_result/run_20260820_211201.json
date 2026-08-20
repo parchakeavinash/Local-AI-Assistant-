@@ -1,0 +1,67 @@
+[
+  {
+    "model_name": "phi3:3.8b",
+    "question_id": 0,
+    "question": "What problem in conventional Retrieval-Augmented Generation (RAG) is CRAG specifically designed to address?",
+    "category": "factual",
+    "answer": "Crag addresses scenarios where retrievers return inaccurate results",
+    "confidence": 1.0,
+    "latency_ms": 28471.1,
+    "ram_used_mb": 0.0,
+    "retries": 0,
+    "success": true,
+    "quality_score": null
+  },
+  {
+    "model_name": "phi3:3.8b",
+    "question_id": 1,
+    "question": "What are the three confidence-based actions used by the CRAG retrieval evaluator?",
+    "category": "factual",
+    "answer": "The text does not specify what exactly the three knowledge retrieval actions or their corresponding confidence degrees are.",
+    "confidence": 0.8,
+    "latency_ms": 24972.0,
+    "ram_used_mb": 0.0,
+    "retries": 0,
+    "success": true,
+    "quality_score": null
+  },
+  {
+    "model_name": "phi3:3.8b",
+    "question_id": 2,
+    "question": "What model is used to initialize the retrieval evaluator in CRAG, and approximately how many parameters does the evaluator have?",
+    "category": "factual",
+    "answer": "FAILED: Model 'phi3:3.8b' failed to produce valid AnswerResponse after 3 attempts.\nLast error : 1 validation error for AnswerResponse\n  Invalid JSON: invalid number at line 6 column 18 [type=json_invalid, inp",
+    "confidence": 0.0,
+    "latency_ms": 0.0,
+    "ram_used_mb": 0.0,
+    "retries": 3,
+    "success": false,
+    "quality_score": null
+  },
+  {
+    "model_name": "phi3:3.8b",
+    "question_id": 3,
+    "question": "What happens to retrieved documents when the retrieval evaluator classifies the retrieval as Incorrect?",
+    "category": "factual",
+    "answer": "The knowledge from the unreliable retrieved results is not used and may lead to misinformation.",
+    "confidence": 1.0,
+    "latency_ms": 25996.5,
+    "ram_used_mb": 0.0,
+    "retries": 0,
+    "success": true,
+    "quality_score": null
+  },
+  {
+    "model_name": "phi3:3.8b",
+    "question_id": 4,
+    "question": "What are the four datasets used to evaluate CRAG, and which evaluation metric is used for the Biography dataset?",
+    "category": "factual",
+    "answer": "The four datasets used to evaluate CRAG are PopQA (short-form generation), Biography (long-form generation) twice, PubHealth (true-or-false question), and Arc-Challenge (multiple-choice question). The evaluation metric for the Biography dataset is FactScore.",
+    "confidence": 1.0,
+    "latency_ms": 28952.6,
+    "ram_used_mb": 0.0,
+    "retries": 0,
+    "success": true,
+    "quality_score": null
+  }
+]

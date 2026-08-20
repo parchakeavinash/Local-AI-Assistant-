@@ -1,0 +1,6 @@
+model_name,question_id,question,category,answer,confidence,latency_ms,ram_used_mb,retries,success,quality_score
+phi3:3.8b,0,What problem in conventional Retrieval-Augmented Generation (RAG) is CRAG specifically designed to address?,factual,Crag proposed Corrective Retrieval-Augmented Generation (CRAG) addresses scenarios where retriever returns inaccurate results.,1.0,29935.2,0.0,0,True,
+phi3:3.8b,1,What are the three confidence-based actions used by the CRAG retrieval evaluator?,factual,SKIPPED: Ollama connection lost,0.0,0.0,0.0,0,False,
+phi3:3.8b,2,"What model is used to initialize the retrieval evaluator in CRAG, and approximately how many parameters does the evaluator have?",factual,SKIPPED: Ollama connection lost,0.0,0.0,0.0,0,False,
+phi3:3.8b,3,What happens to retrieved documents when the retrieval evaluator classifies the retrieval as Incorrect?,factual,SKIPPED: Ollama connection lost,0.0,0.0,0.0,0,False,
+phi3:3.8b,4,"What are the four datasets used to evaluate CRAG, and which evaluation metric is used for the Biography dataset?",factual,SKIPPED: Ollama connection lost,0.0,0.0,0.0,0,False,
