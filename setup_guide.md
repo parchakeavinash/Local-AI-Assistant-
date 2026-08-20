@@ -32,8 +32,8 @@ Before you begin, make sure you have the following installed:
 ## Step 1 — Clone the Repository
 
 ```powershell
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-cd YOUR_REPO_NAME
+git clone https://github.com/parchakeavinash/Local-AI-Assistant-.git
+cd Local-AI-Assistant
 ```
 
 ---
@@ -164,6 +164,8 @@ You should see 5 questions answered with `[PASS]` or `[FAIL]` status, latency, a
 ```powershell
 $env:PYTHONIOENCODING='utf-8'
 .venv\Scripts\python.exe run_benchmark.py
+or
+uv run run_benchmark.py
 ```
 
 Results are saved automatically to `benchmark_result/`:
@@ -178,6 +180,8 @@ To run only specific models:
 ```powershell
 .venv\Scripts\python.exe run_benchmark.py --models=mistral:7b
 .venv\Scripts\python.exe run_benchmark.py --models=phi3:3.8b,llama3.2:3b
+or 
+uv run run_benchmark.py --models=mistral:7b
 ```
 
 ---
@@ -271,6 +275,8 @@ Add-Content $PROFILE '$env:PYTHONIOENCODING="utf-8"'
 # Clear the vector store and re-ingest
 Remove-Item -Recurse -Force "data\chroma_db"
 .venv\Scripts\python.exe ingest_pdfs.py
+or 
+uv run ingest_pdfs.py
 ```
 
 ### Benchmark crashes mid-run
