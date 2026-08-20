@@ -184,13 +184,21 @@ def run_benchmark(
     print(f"  Saved CSV  : {csv_path}")
     print(f"  Saved JSON : {json_path}")
 
-    # Generate and print the comparison report
+    # Generate report and save to file (don't print full markdown to terminal)
     report = generate_report(all_results)
     report_path = BENCHMARK_RESULT_DIR / f"report_{run_label}.md"
     report_path.write_text(report, encoding="utf-8")
     print(f"  Saved report: {report_path}")
     print("=" * 65)
-    print(report)
+
+    # Print a short summary instead of the full markdown
+    successful = [r for r in all_results if r.success]
+    print(f"\n  SUMMARY:")
+    print(f"  Passed  : {len(successful)}/{len(all_results)}")
+    print(f"  Retries : {sum(r.retries for r in all_results)}")
+    avg_lat = sum(r.latency_ms for r in successful) / len(successful) if successful else 0
+    print(f"  Avg latency: {avg_lat:.0f} ms")
+    print(f"\n  Full report -> {report_path}")
 
     return all_results
 

@@ -75,7 +75,7 @@ def generate_report(results: list[BenchmarkResult]) -> str:
                 avg = sum(r.confidence for r in cat_res) / len(cat_res)
                 row.append(f"{avg:.0%}")
             else:
-                row.append("—")
+                row.append("N/A")
         lines.append("| " + " | ".join(row) + " |")
 
     # ── Section 3: Retry Analysis ─────────────────────────────────────────────
@@ -92,7 +92,7 @@ def generate_report(results: list[BenchmarkResult]) -> str:
 
     # ── Section 4: Out-of-Context Hallucination Check ─────────────────────────
     lines.append("\n## Hallucination Check (Out-of-Context Questions)\n")
-    lines.append("*These questions have no answer in the documents. The model should say 'I don't know' with confidence ≈ 0.*\n")
+    lines.append("*These questions have no answer in the documents. The model should say 'I don't know' with confidence ~0.*\n")
     lines.append("| Model | Correct Refusals | Hallucinated | Avg Confidence on OOC |")
     lines.append("|-------|-----------------|--------------|------------------------|")
 
